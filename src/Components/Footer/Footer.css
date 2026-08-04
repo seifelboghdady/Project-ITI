@@ -1,0 +1,18 @@
+footer .social-btn{
+    width: 30px;
+    height: 30px;
+}
+
+footer .social-btn,
+footer li a{
+    transition: var(--trans-duration);
+}
+
+footer .social-btn:hover{
+    background-color: var(--primary-color);
+    color: white !important;
+}
+
+footer li a:hover{
+    color: black !important;   
+}

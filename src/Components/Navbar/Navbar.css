@@ -1,0 +1,32 @@
+.navbar .search-box{
+    border: 1px solid var(--grey-color);
+    border-radius: 30px;
+    color: var(--grey-color);
+    transition: var(--trans-duration);
+    width: 35%
+}
+.navbar .search-box input::placeholder{
+    font-size: 12px;
+    color: var(--grey-color);
+}
+.navbar .search-box input:focus{
+    box-shadow: none;
+}
+.navbar .search-box:focus-within{
+    border-color:  var(--primary-color);
+}
+
+.navbar .links .nav-link{
+    font-size: 12px;
+    transition: var(--trans-duration);
+}
+.navbar .links .signup{
+    background-color: var(--primary-color);
+}
+.navbar .links .signin:hover{
+    color: #95400e;
+    background-color: #fffbeb;
+}
+.navbar  .cart:hover{
+    background-color: var(--grey-color);
+}
