@@ -1,21 +1,32 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { ProductCard } from "./ProductCard";
 import axios from "axios";
 
 export const ProductDetail= ()=>{
     const {id} = useParams();
     const [product, setProduct] = useState(null);
-
     const [mainImage, setMainImage] = useState("");
+    const [relatedProducts, setRelatedProducts] = useState([]);
 
     useEffect(()=>{
+        const getRelatedProducts = async (category) => {
+            const response = await axios.get(
+                `https://dummyjson.com/products/category/${category}`
+            );
+
+            setRelatedProducts(response.data.products.slice(0,3));
+        };
         const getProduct = async () => {
            const response =  await axios.get(`https://dummyjson.com/products/${id}`);
-        //    console.log(response.data);
+            //console.log(response.data);
            setProduct(response.data);
            setMainImage(response.data.thumbnail);
+           getRelatedProducts(response.data.category);
         }
         getProduct();
+
+        
     },[id])
     // console.log(id);
 
@@ -41,13 +52,9 @@ export const ProductDetail= ()=>{
                 <div className="col-lg-6">
 
                     <h2>{product.title}</h2>
-
                     <p>⭐ {product.rating}</p>
-
                     <h3>${product.price}</h3>
-
                     <p>{product.description}</p>
-
                     <div className="d-flex gap-2">
 
                         <span className="badge bg-dark">
@@ -63,10 +70,8 @@ export const ProductDetail= ()=>{
                         </span>
 
                     </div>
-
                     <p><strong>Stock:</strong> {product.stock}</p>
                     <div className="d-flex gap-2 mt-3">
-
                         {product.images.map((image, index) => (
 
                             <img
@@ -123,6 +128,19 @@ export const ProductDetail= ()=>{
                         </div>
                     </div>
 
+                </div>
+
+                <h2 className="fw-bold mb-4">Related Products</h2>
+                <div className="row">
+                    {relatedProducts.map((item) => (
+                        <ProductCard
+                            key={item.id}
+                            id={item.id}
+                            title={item.title}
+                            price={item.price}
+                            imagePath={item.thumbnail}
+                        />
+                    ))}
                 </div>
 
             </div>
