@@ -23,6 +23,7 @@ export const ProductCard = ({ id, title, price, imagePath }) => {
             <p className="card-text fw-bold">{price}</p>
             <button
               className="btn w-100 p-1 fw-bold rounded-pill"
+              onClick={() => navigate(`/product/${id}`)}
               style={{
                 fontSize: "14px",
                 backgroundColor: "var(--primary-color)",

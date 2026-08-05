@@ -25,7 +25,7 @@ export const Home = () => {
 
                     {
                         product.map((item) => (
-                            <ProductCard key={item.id} id={item.id} title={item.brand} price={item.price} imagePath={item.thumbnail}/>
+                            <ProductCard key={item.id} id={item.id} title={item.title} price={item.price} imagePath={item.thumbnail}/>
                         ))
                     }
                 </div>
