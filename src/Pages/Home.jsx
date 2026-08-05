@@ -1,4 +1,15 @@
+import { useState, useEffect } from "react"
+import axios from 'axios';
 export const Home = () => {
+    const [product, setProduct] = useState([]);
+    useEffect(()=>{
+        const getProduct = async ()=>{
+            const response = await axios.get("https://dummyjson.com/products/category/mens-shoes");
+            setProduct(response.data.products);
+        }
+        getProduct();
+    }, []);
+    // console.log(product);
     return (
         <>
             <div className="hero py-5 text-center">
