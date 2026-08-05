@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import axios from 'axios';
+import { ProductCard } from "../Components/ProductCard/ProductCard";
 export const Home = () => {
     const [product, setProduct] = useState([]);
     useEffect(()=>{
@@ -9,7 +10,7 @@ export const Home = () => {
         }
         getProduct();
     }, []);
-    // console.log(product);
+    console.log(product);
     return (
         <>
             <div className="hero py-5 text-center">
@@ -19,6 +20,20 @@ export const Home = () => {
                 </div>
             </div>
             {/* <ProductPage/> */}
+            <div className="container">
+                <div className="row">
+
+                    {
+                        product.map((item) => (
+                            <ProductCard key={item.id} id={item.id} title={item.brand} price={item.price} imagePath={item.thumbnail}/>
+                        ))
+                    }
+                </div>
+            </div>
+                
+                
+            
+            
             
         </>
     )
