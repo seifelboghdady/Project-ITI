@@ -20,7 +20,7 @@ export const ProductCard = ({ id, title, price, imagePath }) => {
           />
           <div className="card-body">
             <p className="card-title mb-0 mt-2">{title}</p>
-            <p className="card-text fw-bold">{price}</p>
+            <p className="card-text fw-bold">${price}</p>
             <button
               className="btn w-100 p-1 fw-bold rounded-pill"
               onClick={() => navigate(`/product/${id}`)}
