@@ -1,0 +1,115 @@
+/* checkout.css
+   BLOOMSHOP - Shared styles for Checkout & ThankYou pages
+   Relies on Bootstrap 5 being loaded globally in the project.
+*/
+
+:root {
+  --bloom-accent: #e68a00;      /* warm orange brand color */
+  --bloom-accent-hover: #cc7a00;
+  --bloom-text: #1f1f1f;
+  --bloom-muted: #6b6b6b;
+  --bloom-border: #e2e2e2;
+  --bloom-bg: #ffffff;
+  --bloom-success: #1e9e56;
+  --bloom-success-bg: #e6f7ee;
+}
+
+.checkout-page {
+  min-height: 100vh;
+  background-color: #faf9f7;
+  color: var(--bloom-text);
+  padding: 2rem 0;
+}
+
+/* Card wrapper shared by Checkout form and ThankYou message */
+.checkout-card {
+  background-color: var(--bloom-bg);
+  border: 1px solid var(--bloom-border);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.checkout-title {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--bloom-text);
+}
+
+.checkout-subtitle {
+  color: var(--bloom-muted);
+  font-size: 0.95rem;
+}
+
+/* Inputs */
+.checkout-input {
+  padding: 0.65rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid var(--bloom-border);
+  font-size: 0.95rem;
+}
+
+.checkout-input:focus {
+  border-color: var(--bloom-accent);
+  box-shadow: 0 0 0 0.2rem rgba(230, 138, 0, 0.2);
+}
+
+/* Payment method radio rows */
+.payment-option {
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--bloom-border);
+  border-radius: 8px;
+}
+
+.payment-option .form-check-input:checked {
+  background-color: var(--bloom-accent);
+  border-color: var(--bloom-accent);
+}
+
+.payment-option .form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(230, 138, 0, 0.2);
+}
+
+.payment-error {
+  font-size: 0.85rem;
+}
+
+/* Primary accent button (Place Order / Continue Shopping) */
+.btn-checkout-primary {
+  background-color: var(--bloom-accent);
+  border: 1px solid var(--bloom-accent);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.btn-checkout-primary:hover,
+.btn-checkout-primary:focus {
+  background-color: var(--bloom-accent-hover);
+  border-color: var(--bloom-accent-hover);
+  color: #ffffff;
+}
+
+.btn-checkout-primary:disabled {
+  background-color: var(--bloom-accent);
+  opacity: 0.7;
+}
+
+/* ThankYou success badge */
+.success-badge {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background-color: var(--bloom-success-bg);
+  color: var(--bloom-success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-icon {
+  width: 46px;
+  height: 46px;
+}
