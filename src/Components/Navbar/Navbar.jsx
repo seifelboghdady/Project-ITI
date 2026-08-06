@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { BsSearch, BsCart, BsList, BsX } from "react-icons/bs";
 import { useCart } from "../Cart/useCart";
 
-export const Navbar = () => {
+export const Navbar = ({search, setSearch}) => {
     const { cartCount } = useCart();
     const location = useLocation();
     const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -34,9 +34,11 @@ export const Navbar = () => {
             <div className="search-box mx-auto d-none d-lg-flex justify-content-center align-items-center gap-2 px-3 py-0">
                 <BsSearch className="search-icon" />
                 <input
-                type="text"
-                className="form-control border-0 p-1 w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
-                placeholder=" Search products..."
+                    type="text"
+                    className="form-control border-0 p-1 w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
+                    placeholder=" Search products..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                 />
             </div>
 
@@ -95,6 +97,8 @@ export const Navbar = () => {
                     type="text"
                     className="form-control border-0 p-1 w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all"
                     placeholder=" Search products..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     autoFocus
                 />
                 </div>
