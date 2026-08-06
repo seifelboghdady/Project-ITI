@@ -7,6 +7,31 @@
 .product-card img,
 .product-card .card-title{
     cursor: pointer;
+    will-change: transform;
+}
+.product-card .image::after{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    transition: var(--trans-duration);
+    cursor: pointer;
+}
+.product-card .image span{
+    width: fit-content;
+    height: fit-content;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: var(--trans-duration);
+    z-index: 1;
+    font-size: 13px;
+    background-color: rgb(252, 157, 15);
 }
 .product-card:hover{
     transform: translateY(-5px);
@@ -14,6 +39,23 @@
 .product-card:hover img{
     transform: scale(1.04);
 }
-.product-card .card-title:hover{
+.product-card:hover .image::after{
+    opacity: 0.5;
+} 
+.product-card:hover .image span{
+    opacity: 1;
+}
+.product-card:hover .card-title{
     color: var(--primary-color);
+}
+
+.product-card .card-img-top {
+    height: 350px; 
+}
+
+/* في الموبايل والشاشات الصغيرة نخلي الارتفاع أكبر عشان يحافظ على الشكل الطولي */
+@media (max-width: 767px) {
+    .product-card .card-img-top {
+        height: 300px; /* طول أكتر للموبايل عشان ميبقاش عريض ومطط */
+    }
 }
