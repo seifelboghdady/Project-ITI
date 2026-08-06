@@ -1,9 +1,12 @@
 import "./Navbar.css";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { BsSearch, BsCart, BsList, BsX } from "react-icons/bs";
+import { useCart } from "../Cart/useCart";
 
 export const Navbar = () => {
+    const { cartCount } = useCart();
+    const location = useLocation();
     const [isAuthOpen, setIsAuthOpen] = useState(false);
 
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -46,8 +49,18 @@ export const Navbar = () => {
                 {isSearchOpen ? <BsX className="fs-3" /> : <BsSearch />}
                 </button>
 
-                <Link to="/cart" className="nav-link cart px-2 py-2 rounded-circle">
+                <Link
+                    to="/cart"
+                    state={{
+                        returnTo: `${location.pathname}${location.search}${location.hash}`,
+                    }}
+                    className="nav-link cart px-2 py-2 rounded-circle position-relative"
+                    aria-label="Cart"
+                >
                 <BsCart style={{ fontSize: "1.3rem" }} />
+                {cartCount > 0 && (
+                    <span className="cart-badge">{cartCount}</span>
+                )}
                 </Link>
 
                 <button

@@ -2,9 +2,11 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ProductCard } from "./ProductCard";
 import axios from "axios";
+import { useCart } from "../Cart/useCart";
 
 export const ProductDetail= ()=>{
     const {id} = useParams();
+    const { addToCart } = useCart();
     const [product, setProduct] = useState(null);
     const [mainImage, setMainImage] = useState("");
     const [relatedProducts, setRelatedProducts] = useState([]);
@@ -90,7 +92,10 @@ export const ProductDetail= ()=>{
                         ))}
 
                     </div>
-                    <button className="btn btn-warning px-5 py-2 rounded-pill">
+                    <button
+                        className="btn btn-warning px-5 py-2 rounded-pill"
+                        onClick={() => addToCart(product)}
+                    >
                         Add To Cart
                     </button>
 

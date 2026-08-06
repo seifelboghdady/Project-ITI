@@ -1,7 +1,15 @@
 import "./ProductCard.css";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../Cart/useCart";
 export const ProductCard = ({ id, title, price, imagePath }) => {
   const navigate = useNavigate();
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (event) => {
+    event.stopPropagation();
+    addToCart({ id, title, price, thumbnail: imagePath });
+  };
+
   return (
     <>
       <div
@@ -23,13 +31,13 @@ export const ProductCard = ({ id, title, price, imagePath }) => {
             <p className="card-text fw-bold">${price}</p>
             <button
               className="btn w-100 p-1 fw-bold rounded-pill"
-              onClick={() => navigate(`/product/${id}`)}
+              onClick={handleAddToCart}
               style={{
                 fontSize: "14px",
                 backgroundColor: "var(--primary-color)",
               }}
             >
-              View Details
+              Add To Cart
             </button>
           </div>
         </div>
