@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react"
 import axios from 'axios';
 import { ProductCard } from "../Components/ProductCard/ProductCard";
-export const Home = () => {
-    const [product, setProduct] = useState(null);
+export const Home = ({search}) => {
+    console.log(search);
+    const [product, setProduct] = useState([]);
+    const filteredProducts = product.filter((item) =>
+        item.title.toLowerCase().includes(search.toLowerCase())
+    );
     useEffect(()=>{
         const getProduct = async ()=>{
             const menResponse = await axios.get("https://dummyjson.com/products/category/mens-shoes");
@@ -14,15 +18,11 @@ export const Home = () => {
         }
         getProduct();
     }, []);
-
-    if (!product) {
-        return (
-            <div className="d-flex justify-content-center align-items-center" style={{ height: "70vh" }}>
+    if (!product.length) {
+        return (<div className="d-flex justify-content-center align-items-center" style={{ height: "70vh" }}>
                 <div className="spinner-border text-warning" role="status"></div>
-            </div>
-        );
+            </div>);
     }
-
     return (
         <>
             <div className="hero py-5 text-center">
@@ -36,17 +36,12 @@ export const Home = () => {
                 <div className="row">
 
                     {
-                        product.map((item) => (
+                        filteredProducts.map((item) => (
                             <ProductCard key={item.id} id={item.id} title={item.title} price={item.price} imagePath={item.thumbnail}/>
                         ))
                     }
                 </div>
             </div>
-                
-                
-            
-            
-            
         </>
     )
 }
