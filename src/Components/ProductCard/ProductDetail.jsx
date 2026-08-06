@@ -99,7 +99,7 @@ export const ProductDetail= ()=>{
 
                     </div>
                     <button
-                        className="btn btn-warning px-5 py-2 rounded-pill"
+                        className="btn btn-warning px-5 py-2 rounded-pill mt-3"
                         onClick={() => addToCart(product)}
                     >
                         Add To Cart
