@@ -5,8 +5,12 @@ export const Home = () => {
     const [product, setProduct] = useState([]);
     useEffect(()=>{
         const getProduct = async ()=>{
-            const response = await axios.get("https://dummyjson.com/products/category/mens-shoes");
-            setProduct(response.data.products);
+            const menResponse = await axios.get("https://dummyjson.com/products/category/mens-shoes");
+            const womenResponse = await axios.get("https://dummyjson.com/products/category/womens-shoes");
+            const allShoes = [
+                ...menResponse.data.products,
+                ...womenResponse.data.products];
+            setProduct(allShoes);
         }
         getProduct();
     }, []);
