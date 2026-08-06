@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import axios from 'axios';
 import { ProductCard } from "../Components/ProductCard/ProductCard";
 export const Home = () => {
-    const [product, setProduct] = useState([]);
+    const [product, setProduct] = useState(null);
     useEffect(()=>{
         const getProduct = async ()=>{
             const menResponse = await axios.get("https://dummyjson.com/products/category/mens-shoes");
@@ -14,7 +14,15 @@ export const Home = () => {
         }
         getProduct();
     }, []);
-    console.log(product);
+
+    if (!product) {
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{ height: "70vh" }}>
+                <div className="spinner-border text-warning" role="status"></div>
+            </div>
+        );
+    }
+
     return (
         <>
             <div className="hero py-5 text-center">
