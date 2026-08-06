@@ -12,6 +12,10 @@ export const ProductDetail= ()=>{
     const [relatedProducts, setRelatedProducts] = useState([]);
 
     useEffect(()=>{
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
         const getRelatedProducts = async (category) => {
             const response = await axios.get(
                 `https://dummyjson.com/products/category/${category}`
@@ -33,14 +37,16 @@ export const ProductDetail= ()=>{
     // console.log(id);
 
     if (!product) {
-        return <h2>Loading...</h2>;
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{ height: "70vh" }}>
+                <div className="spinner-border text-warning" role="status"></div>
+            </div>
+        );
     }
     return (
         
         <div className="container py-5">
-
             <div className="row">
-
                 {/* Left Side - Image */}
                 <div className="col-lg-6">
                    <img
