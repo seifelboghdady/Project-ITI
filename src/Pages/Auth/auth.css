@@ -1,0 +1,127 @@
+/* auth.css
+   BLOOMSHOP - Shared styles for Login & Register pages
+   Import this in both Login.jsx and Register.jsx (already done above).
+   Relies on Bootstrap 5 being loaded globally in the project.
+*/
+
+:root {
+  --bloom-accent: #e68a00;      /* warm orange/yellow accent */
+  --bloom-accent-hover: #cc7a00; /* slightly darker for hover state */
+  --bloom-text: #1f1f1f;         /* near-black text */
+  --bloom-muted: #6b6b6b;        /* secondary/subtitle text */
+  --bloom-border: #e2e2e2;       /* light border for inputs/cards */
+  --bloom-bg: #ffffff;           /* page background */
+}
+
+/* Full-height centered page wrapper */
+.auth-page {
+  min-height: 100vh;
+  background-color: var(--bloom-bg);
+  color: var(--bloom-text);
+  padding: 2rem 0;
+}
+
+/* Card that holds the form */
+.auth-card {
+  background-color: var(--bloom-bg);
+  border: 1px solid var(--bloom-border);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* Brand title */
+.auth-brand {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--bloom-text);
+  font-size: 1.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.auth-subtitle {
+  color: var(--bloom-muted);
+  font-size: 0.95rem;
+}
+
+/* Inputs - modern, clean look on top of Bootstrap's form-control */
+.auth-input {
+  padding: 0.65rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid var(--bloom-border);
+  font-size: 0.95rem;
+}
+
+.auth-input:focus {
+  border-color: var(--bloom-accent);
+  box-shadow: 0 0 0 0.2rem rgba(230, 138, 0, 0.2);
+}
+
+/* Primary accent button (Sign Up / Login) */
+.btn-auth-primary {
+  background-color: var(--bloom-accent);
+  border: 1px solid var(--bloom-accent);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.btn-auth-primary:hover,
+.btn-auth-primary:focus {
+  background-color: var(--bloom-accent-hover);
+  border-color: var(--bloom-accent-hover);
+  color: #ffffff;
+}
+
+.btn-auth-primary:disabled {
+  background-color: var(--bloom-accent);
+  opacity: 0.7;
+}
+
+/* Error / mismatch alert on Login */
+.auth-alert {
+  background-color: #fdecec;
+  border: 1px solid #f5b5b5;
+  color: #a12b2b;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+
+/* Bottom "switch page" text (e.g. "Don't have an account? Sign up") */
+.auth-switch-text {
+  color: var(--bloom-muted);
+  font-size: 0.9rem;
+}
+
+.auth-switch-text a {
+  color: var(--bloom-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-switch-text a:hover {
+  text-decoration: underline;
+  color: var(--bloom-accent-hover);
+}
+
+/* إجبار زرار التسجيل والـ Login على الظهور باللون البرتقالي */
+.auth-card button[type="submit"] {
+  width: 100% !important;
+  padding: 12px !important;
+  background-color: #e68a00 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: bold !important;
+  font-size: 16px !important;
+  cursor: pointer !important;
+  margin-top: 15px !important;
+  display: block !important;
+}
+
+.auth-card button[type="submit"]:hover {
+  background-color: #cc7a00 !important;
+}
