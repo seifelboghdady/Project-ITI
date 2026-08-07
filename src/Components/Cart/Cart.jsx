@@ -128,7 +128,7 @@ export const Cart = () => {
                 <strong>${orderTotal.toFixed(2)}</strong>
               </div>
 
-              <button type="button" className="btn cart-primary-btn w-100">
+              <button type="button" className="btn cart-primary-btn w-100" onClick={() => navigate("/checkout")}>
                 Checkout
               </button>
               {continueShoppingButton("btn btn-outline-dark w-100 mt-2")}
