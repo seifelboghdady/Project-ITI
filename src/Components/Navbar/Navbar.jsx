@@ -1,5 +1,5 @@
 import "./Navbar.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BsSearch, BsCart, BsList, BsX } from "react-icons/bs";
 import { useCart } from "../Cart/useCart";
@@ -8,17 +8,29 @@ export const Navbar = ({search, setSearch}) => {
     const { cartCount } = useCart();
     const location = useLocation();
     const navigate = useNavigate();
-    // بنجيب التوكن واسم المستخدم من اللوكال ستوريدج
+    
     const token = localStorage.getItem("token"); 
-    const userName = localStorage.getItem("userName"); // أو أي اسم إنتوا مسجلين بيه الداتا
+    const userName = localStorage.getItem("userName"); 
 
     const handleLogout = () => {
         localStorage.removeItem("token");
-        localStorage.removeItem("userName"); // امسح أي داتا تانية متعلقة باليوزر
-        navigate("/signin"); // نرجعه لصفحة اللوجين
+        localStorage.removeItem("userName"); 
+        navigate("/signin"); 
     };
     const [isAuthOpen, setIsAuthOpen] = useState(false);
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 576) {
+                setIsAuthOpen(false);
+            }
+        };
 
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     const toggleAuthMenu = () => {
@@ -84,14 +96,21 @@ export const Navbar = ({search, setSearch}) => {
                 </button>
 
                 <div className=" d-none d-sm-flex align-items-center gap-2">
-                {token ? (
-                    <>
-                        <span className="fw-bold me-2 text-capitalize">{userName || "User"}</span>
-                        <button onClick={handleLogout} className="btn btn-outline-danger px-3 py-1 rounded-pill text-center">
-                            Logout
-                        </button>
-                    </>
-                ) : (
+                    {token ? (
+                        <>
+                            <div
+                                className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold"
+                                style={{ width: "35px", height: "35px" }}
+                            >
+                                {userName?.charAt(0).toUpperCase() || "U"}
+                            </div>
+
+                            <span className="fw-bold me-2 text-capitalize">{userName || "User"}</span>
+                            <button onClick={handleLogout} className="btn btn-outline-danger px-3 py-1 rounded-pill text-center">
+                                Logout
+                            </button>
+                        </>
+                    ) : (
                     <>
                         <Link to="/signin" className="nav-link signin px-2 py-1 rounded-pill">
                             Sign In
@@ -119,26 +138,48 @@ export const Navbar = ({search, setSearch}) => {
             )}
 
             {isAuthOpen && (
-            <div className="w-100 d-sm-none d-flex flex-column gap-2 mt-2">
-                {token ? (
-                    <>
-                        <span className="fw-bold text-center text-capitalize mb-1">{userName || "User"}</span>
-                        <button onClick={handleLogout} className="btn btn-outline-danger px-3 py-1 rounded-pill text-center">
-                            Logout
+                <div className="d-sm-none">
+                    {token ? (
+                    <div className="d-flex align-items-center gap-2">
+                        
+                        <div
+                        className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold"
+                        style={{ width: "35px", height: "35px" }}
+                        >
+                        {userName?.charAt(0).toUpperCase() || "U"}
+                        </div>
+
+                        <span className="fw-bold text-capitalize">
+                        {userName || "User"}
+                        </span>
+
+                        <button
+                        onClick={handleLogout}
+                        className="btn btn-outline-danger px-3 py-1 rounded-pill"
+                        >
+                        Logout
                         </button>
-                    </>
-                ) : (
+
+                    </div>
+                    ) : (
                     <>
-                        <Link to="/signin" className="nav-link signin px-2 py-1 rounded-pill text-center">
-                            Sign In
+                        <Link
+                        to="/signin"
+                        className="nav-link signin px-2 py-1 rounded-pill text-center"
+                        >
+                        Sign In
                         </Link>
-                        <Link to="/signup" className="nav-link signup rounded-pill px-3 py-1 shadow-sm text-center">
-                            Sign Up
+
+                        <Link
+                        to="/signup"
+                        className="nav-link signup rounded-pill px-3 py-1 shadow-sm text-center"
+                        >
+                        Sign Up
                         </Link>
                     </>
+                    )}
+                </div>
                 )}
-            </div>
-            )}
         </div>
       </nav>
     </>
