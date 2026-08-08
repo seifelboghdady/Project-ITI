@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import axios from 'axios';
 import { ProductCard } from "../Components/ProductCard/ProductCard";
-export const Home = ({search}) => {
+export const Home = ({search, setSearch}) => {
     console.log(search);
     const [product, setProduct] = useState([]);
     const filteredProducts = product.filter((item) =>
@@ -23,6 +23,37 @@ export const Home = ({search}) => {
                 <div className="spinner-border text-warning" role="status"></div>
             </div>);
     }
+    if (filteredProducts.length === 0) {
+        return (
+            <div className="container py-5">
+            <div className="text-center py-5">
+                <div
+                className="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4"
+                style={{ width: "100px", height: "100px" }}
+                >
+                <i className="bi bi-search fs-1 text-secondary"></i>
+                {/* <span className="fs-1">🔍</span> */}
+                </div>
+
+                <h2 className="fw-bold text-dark">
+                No Products Found
+                </h2>
+
+                <p className="text-muted mb-4">
+                Sorry, we couldn't find any product matching your search.
+                </p>
+
+                <button
+                className="btn btn-primary px-4 py-2"
+                onClick={() => setSearch("")}
+                >
+                <i className="bi bi-arrow-left me-2"></i>
+                Clear Search
+                </button>
+            </div>
+            </div>
+        );
+        }
     return (
         <>
             <div className="hero py-5 text-center">
