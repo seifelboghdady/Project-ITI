@@ -1,8 +1,3 @@
-// Checkout.jsx
-// BLOOMSHOP - Checkout Component
-// Protected route: requires a "token" in localStorage (set during Login).
-// Uses react-hook-form + yup for validation, Bootstrap 5 for layout.
-
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,218 +6,615 @@ import { useNavigate } from "react-router-dom";
 import "./checkout.css";
 import { useCart } from "../../Components/Cart/useCart";
 
-// ---- Validation Schema ----
+// -----------------------------
+// Validation Schema
+// -----------------------------
 const checkoutSchema = yup.object({
   fullName: yup.string().trim().required("Full name is required"),
+
   address: yup.string().trim().required("Shipping address is required"),
+
   city: yup.string().trim().required("City is required"),
+
   phone: yup
     .string()
     .trim()
     .required("Phone number is required")
-    // Accepts optional leading + and 8-15 digits — adjust to your locale's format if needed
-    .matches(/^\+?[0-9]{8,15}$/, "Please enter a valid phone number"),
+    .matches(
+      /^\+?[0-9]{8,15}$/,
+      "Please enter a valid phone number"
+    ),
+
   paymentMethod: yup
     .string()
     .oneOf(["cod", "card"], "Please select a payment method")
     .required("Please select a payment method"),
+
+  cardNumber: yup.string().when("paymentMethod", {
+    is: "card",
+    then: (schema) =>
+      schema
+        .required("Card number is required")
+        .matches(
+          /^[0-9 ]{13,19}$/,
+          "Please enter a valid card number"
+        ),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+
+  expiryDate: yup.string().when("paymentMethod", {
+    is: "card",
+    then: (schema) =>
+      schema
+        .required("Expiry date is required")
+        .matches(
+          /^(0[1-9]|1[0-2])\/\d{2}$/,
+          "Use MM/YY format"
+        ),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+
+  cvv: yup.string().when("paymentMethod", {
+    is: "card",
+    then: (schema) =>
+      schema
+        .required("CVV is required")
+        .matches(/^[0-9]{3,4}$/, "Invalid CVV"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
 });
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { clearCart } = useCart();
 
-  // ---- Route Protection ----
+  const {
+    cartItems,
+    cartTotal,
+    clearCart,
+  } = useCart();
+
+  // -----------------------------
+  // Route Protection
+  // -----------------------------
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (!token) {
       navigate("/signin");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate]);
+
+  // -----------------------------
+  // Scroll to top when entering checkout
+  // -----------------------------
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
+  // -----------------------------
+  // Cart calculations
+  // -----------------------------
+  const shipping = cartItems.length ? 12 : 0;
+  const orderTotal = cartTotal + shipping;
+
+  // -----------------------------
+  // React Hook Form
+  // -----------------------------
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(checkoutSchema),
+
     defaultValues: {
       fullName: "",
       address: "",
       city: "",
       phone: "",
-      paymentMethod: "cod", // default payment method: Cash on Delivery
+      paymentMethod: "cod",
+      cardNumber: "",
+      expiryDate: "",
+      cvv: "",
     },
+
     mode: "onBlur",
   });
 
-  // ---- Submit Handler ----
+  const paymentMethod = watch("paymentMethod");
+
+  // -----------------------------
+  // Submit
+  // -----------------------------
   const onSubmit = (data) => {
-    // NOTE: No backend — we simulate placing an order.
-    // In a real app this would POST to an orders API.
     const order = {
       ...data,
+
+      items: cartItems,
+
+      subtotal: cartTotal,
+
+      shipping,
+
+      total: orderTotal,
+
       placedAt: new Date().toISOString(),
     };
+
     localStorage.setItem("lastOrder", JSON.stringify(order));
 
-    // السطر الجديد اللي هيفضي السلة
-    clearCart(); 
+    clearCart();
 
     navigate("/thankyou");
   };
 
-    
-
   return (
-    <div className="checkout-page">
-      <div className="container py-5">
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-9 col-lg-7">
-            <div className="checkout-card">
-              <h1 className="checkout-title">Checkout</h1>
-              <p className="checkout-subtitle mb-4">
-                Enter your shipping details to place your order
-              </p>
+    <main className="checkout-page">
+      <div className="container">
 
-              <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                {/* Full Name */}
-                <div className="mb-3">
-                  <label htmlFor="fullName" className="form-label">
-                    Full Name
-                  </label>
-                  <input
-                    id="fullName"
-                    type="text"
-                    className={`form-control checkout-input ${
-                      errors.fullName ? "is-invalid" : ""
-                    }`}
-                    placeholder="Jane Doe"
-                    {...register("fullName")}
-                  />
-                  {errors.fullName && (
-                    <div className="invalid-feedback">
-                      {errors.fullName.message}
-                    </div>
-                  )}
-                </div>
+        {/* Page Header */}
+        <div className="checkout-header">
+          <h1 className="checkout-title">
+            Checkout
+          </h1>
 
-                {/* Shipping Address */}
-                <div className="mb-3">
-                  <label htmlFor="address" className="form-label">
-                    Shipping Address
-                  </label>
-                  <input
-                    id="address"
-                    type="text"
-                    className={`form-control checkout-input ${
-                      errors.address ? "is-invalid" : ""
-                    }`}
-                    placeholder="123 Main St, Apt 4B"
-                    {...register("address")}
-                  />
-                  {errors.address && (
-                    <div className="invalid-feedback">
-                      {errors.address.message}
-                    </div>
-                  )}
-                </div>
+          <p className="checkout-subtitle">
+            Complete your order securely
+          </p>
+        </div>
 
-                {/* City */}
-                <div className="mb-3">
-                  <label htmlFor="city" className="form-label">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+        >
+          <div className="checkout-layout">
+
+            {/* =====================================
+                LEFT SIDE - CUSTOMER INFORMATION
+            ====================================== */}
+            <section className="checkout-card checkout-form-card">
+
+              <div className="checkout-section-header">
+                <h2>Delivery Information</h2>
+
+                <p>
+                  Enter your details so we can deliver
+                  your order to you.
+                </p>
+              </div>
+
+              {/* Full Name */}
+              <div className="checkout-field">
+                <label htmlFor="fullName">
+                  Full Name
+                </label>
+
+                <input
+                  id="fullName"
+                  type="text"
+                  className={`checkout-input ${
+                    errors.fullName ? "input-error" : ""
+                  }`}
+                  placeholder="Jane Doe"
+                  {...register("fullName")}
+                />
+
+                {errors.fullName && (
+                  <span className="checkout-error">
+                    {errors.fullName.message}
+                  </span>
+                )}
+              </div>
+
+              {/* Address */}
+              <div className="checkout-field">
+                <label htmlFor="address">
+                  Shipping Address
+                </label>
+
+                <input
+                  id="address"
+                  type="text"
+                  className={`checkout-input ${
+                    errors.address ? "input-error" : ""
+                  }`}
+                  placeholder="123 Main St, Apt 4B"
+                  {...register("address")}
+                />
+
+                {errors.address && (
+                  <span className="checkout-error">
+                    {errors.address.message}
+                  </span>
+                )}
+              </div>
+
+              {/* City + Phone */}
+              <div className="checkout-two-columns">
+
+                <div className="checkout-field">
+                  <label htmlFor="city">
                     City
                   </label>
+
                   <input
                     id="city"
                     type="text"
-                    className={`form-control checkout-input ${
-                      errors.city ? "is-invalid" : ""
+                    className={`checkout-input ${
+                      errors.city ? "input-error" : ""
                     }`}
                     placeholder="Cairo"
                     {...register("city")}
                   />
+
                   {errors.city && (
-                    <div className="invalid-feedback">
+                    <span className="checkout-error">
                       {errors.city.message}
-                    </div>
+                    </span>
                   )}
                 </div>
 
-                {/* Phone Number */}
-                <div className="mb-4">
-                  <label htmlFor="phone" className="form-label">
+                <div className="checkout-field">
+                  <label htmlFor="phone">
                     Phone Number
                   </label>
+
                   <input
                     id="phone"
                     type="tel"
-                    className={`form-control checkout-input ${
-                      errors.phone ? "is-invalid" : ""
+                    className={`checkout-input ${
+                      errors.phone ? "input-error" : ""
                     }`}
                     placeholder="+201234567890"
                     {...register("phone")}
                   />
+
                   {errors.phone && (
-                    <div className="invalid-feedback">
+                    <span className="checkout-error">
                       {errors.phone.message}
-                    </div>
+                    </span>
                   )}
                 </div>
 
-                {/* Payment Method */}
-                <div className="mb-4">
-                  <label className="form-label d-block">
-                    Payment Method
-                  </label>
+              </div>
 
-                  <div className="form-check payment-option mb-2">
+              {/* =====================================
+                  PAYMENT METHOD
+              ====================================== */}
+              <div className="checkout-payment">
+
+                <div className="checkout-section-header">
+                  <h2>Payment Method</h2>
+
+                  <p>
+                    Choose how you would like to pay.
+                  </p>
+                </div>
+
+                <div className="payment-methods">
+
+                  {/* Cash */}
+                  <label
+                    className={`payment-option ${
+                      paymentMethod === "cod"
+                        ? "active"
+                        : ""
+                    }`}
+                  >
                     <input
-                      id="paymentCod"
                       type="radio"
                       value="cod"
-                      className="form-check-input"
                       {...register("paymentMethod")}
                     />
-                    <label htmlFor="paymentCod" className="form-check-label">
-                      Cash on Delivery
-                    </label>
-                  </div>
 
-                  <div className="form-check payment-option">
+                    <div className="payment-option-content">
+
+                      <div className="payment-icon">
+                        💵
+                      </div>
+
+                      <div>
+                        <strong>
+                          Cash on Delivery
+                        </strong>
+
+                        <small>
+                          Pay when your order arrives
+                        </small>
+                      </div>
+
+                    </div>
+
+                    <span className="payment-check">
+                      ✓
+                    </span>
+                  </label>
+
+
+                  {/* Card */}
+                  <label
+                    className={`payment-option ${
+                      paymentMethod === "card"
+                        ? "active"
+                        : ""
+                    }`}
+                  >
                     <input
-                      id="paymentCard"
                       type="radio"
                       value="card"
-                      className="form-check-input"
                       {...register("paymentMethod")}
                     />
-                    <label htmlFor="paymentCard" className="form-check-label">
-                      Credit / Debit Card
-                    </label>
-                  </div>
 
-                  {errors.paymentMethod && (
-                    <div className="text-danger payment-error mt-1">
-                      {errors.paymentMethod.message}
+                    <div className="payment-option-content">
+
+                      <div className="payment-icon">
+                        💳
+                      </div>
+
+                      <div>
+                        <strong>
+                          Credit / Debit Card
+                        </strong>
+
+                        <small>
+                          Pay securely with your card
+                        </small>
+                      </div>
+
                     </div>
-                  )}
+
+                    <span className="payment-check">
+                      ✓
+                    </span>
+                  </label>
+
                 </div>
 
+                {errors.paymentMethod && (
+                  <span className="checkout-error">
+                    {errors.paymentMethod.message}
+                  </span>
+                )}
+
+                {/* =====================================
+                    CARD DETAILS
+                ====================================== */}
+                {paymentMethod === "card" && (
+                  <div className="card-details">
+
+                    <div className="card-details-header">
+                      <h3>
+                        Card Details
+                      </h3>
+
+                      <span>
+                        🔒 Secure payment
+                      </span>
+                    </div>
+
+                    {/* Card Number */}
+                    <div className="checkout-field">
+                      <label htmlFor="cardNumber">
+                        Card Number
+                      </label>
+
+                      <input
+                        id="cardNumber"
+                        type="text"
+                        inputMode="numeric"
+                        autoComplete="cc-number"
+                        className={`checkout-input ${
+                          errors.cardNumber
+                            ? "input-error"
+                            : ""
+                        }`}
+                        placeholder="1234 5678 9012 3456"
+                        {...register("cardNumber")}
+                      />
+
+                      {errors.cardNumber && (
+                        <span className="checkout-error">
+                          {errors.cardNumber.message}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Expiry + CVV */}
+                    <div className="checkout-two-columns">
+
+                      <div className="checkout-field">
+                        <label htmlFor="expiryDate">
+                          Expiry Date
+                        </label>
+
+                        <input
+                          id="expiryDate"
+                          type="text"
+                          inputMode="numeric"
+                          autoComplete="cc-exp"
+                          className={`checkout-input ${
+                            errors.expiryDate
+                              ? "input-error"
+                              : ""
+                          }`}
+                          placeholder="MM/YY"
+                          maxLength={5}
+                          {...register("expiryDate")}
+                        />
+
+                        {errors.expiryDate && (
+                          <span className="checkout-error">
+                            {errors.expiryDate.message}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="checkout-field">
+                        <label htmlFor="cvv">
+                          CVV
+                        </label>
+
+                        <input
+                          id="cvv"
+                          type="password"
+                          inputMode="numeric"
+                          autoComplete="cc-csc"
+                          className={`checkout-input ${
+                            errors.cvv
+                              ? "input-error"
+                              : ""
+                          }`}
+                          placeholder="123"
+                          maxLength={4}
+                          {...register("cvv")}
+                        />
+
+                        {errors.cvv && (
+                          <span className="checkout-error">
+                            {errors.cvv.message}
+                          </span>
+                        )}
+                      </div>
+
+                    </div>
+
+                  </div>
+                )}
+
+              </div>
+
+              {/* Mobile Place Order */}
+              <button
+                type="submit"
+                className="btn btn-checkout-primary mobile-place-order"
+                disabled={isSubmitting}
+              >
+                {isSubmitting
+                  ? "Placing Order..."
+                  : "Place Order"}
+              </button>
+
+            </section>
+
+
+            {/* =====================================
+                RIGHT SIDE - ORDER SUMMARY
+            ====================================== */}
+            <aside className="checkout-summary">
+
+              <div className="checkout-card">
+
+                <div className="summary-header">
+                  <h2>
+                    Order Summary
+                  </h2>
+
+                  <span>
+                    {cartItems.length}{" "}
+                    {cartItems.length === 1
+                      ? "item"
+                      : "items"}
+                  </span>
+                </div>
+
+
+                {/* Products */}
+                <div className="checkout-products">
+
+                  {cartItems.map((item) => (
+                    <div
+                      className="checkout-product"
+                      key={item.id}
+                    >
+                      <img
+                        src={item.thumbnail}
+                        alt={item.title}
+                      />
+
+                      <div className="checkout-product-info">
+
+                        <h3>
+                          {item.title}
+                        </h3>
+
+                        <p>
+                          {item.quantity} × $
+                          {item.price.toFixed(2)}
+                        </p>
+
+                      </div>
+
+                      <strong>
+                        $
+                        {(
+                          item.price *
+                          item.quantity
+                        ).toFixed(2)}
+                      </strong>
+
+                    </div>
+                  ))}
+
+                </div>
+
+
+                {/* Totals */}
+                <div className="checkout-totals">
+
+                  <div>
+                    <span>
+                      Subtotal
+                    </span>
+
+                    <strong>
+                      ${cartTotal.toFixed(2)}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>
+                      Shipping
+                    </span>
+
+                    <strong>
+                      ${shipping.toFixed(2)}
+                    </strong>
+                  </div>
+
+                  <div className="checkout-total">
+                    <span>
+                      Total
+                    </span>
+
+                    <strong>
+                      ${orderTotal.toFixed(2)}
+                    </strong>
+                  </div>
+
+                </div>
+
+
+                {/* Desktop Place Order */}
                 <button
                   type="submit"
-                  className="btn btn-checkout-primary w-100"
+                  className="btn btn-checkout-primary desktop-place-order"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Placing Order..." : "Place Order"}
+                  {isSubmitting
+                    ? "Placing Order..."
+                    : "Place Order"}
                 </button>
-              </form>
-            </div>
+                <p className="checkout-secure-note">
+                  🔒 Your information is protected
+                  and secure.
+                </p>
+              </div>
+            </aside>
           </div>
-        </div>
+        </form>
       </div>
-    </div>
+    </main>
   );
 };
 

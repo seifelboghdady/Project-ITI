@@ -4,11 +4,14 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import "./checkout.css";
 
 const ThankYou = () => {
   const navigate = useNavigate();
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const handleContinueShopping = () => {
     navigate("/");
   };
