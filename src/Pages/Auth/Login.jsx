@@ -55,6 +55,10 @@ const Login = () => {
     if (emailMatches && passwordMatches) {
       // Simulate a successful login by storing a dummy token
       localStorage.setItem("token", "dummy-auth-token-123");
+      
+     // Attempts to get the name; falls back to the first part of the email if not found      const displayName = storedUser.name || storedUser.fullName || data.email.split('@')[0];
+      localStorage.setItem("userName", displayName);
+
       navigate("/"); // or navigate("/checkout") depending on your flow
     } else {
       setLoginError("Invalid email or password. Please try again.");

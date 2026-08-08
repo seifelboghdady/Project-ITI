@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import "./checkout.css";
+import { useCart } from "../../Components/Cart/useCart";
 
 // ---- Validation Schema ----
 const checkoutSchema = yup.object({
@@ -29,6 +30,7 @@ const checkoutSchema = yup.object({
 
 const Checkout = () => {
   const navigate = useNavigate();
+  const { clearCart } = useCart();
 
   // ---- Route Protection ----
   useEffect(() => {
@@ -65,8 +67,13 @@ const Checkout = () => {
     };
     localStorage.setItem("lastOrder", JSON.stringify(order));
 
+    // السطر الجديد اللي هيفضي السلة
+    clearCart(); 
+
     navigate("/thankyou");
   };
+
+    
 
   return (
     <div className="checkout-page">
