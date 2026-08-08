@@ -1,12 +1,22 @@
 import "./Navbar.css";
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BsSearch, BsCart, BsList, BsX } from "react-icons/bs";
 import { useCart } from "../Cart/useCart";
 
 export const Navbar = ({search, setSearch}) => {
     const { cartCount } = useCart();
     const location = useLocation();
+    const navigate = useNavigate();
+    // بنجيب التوكن واسم المستخدم من اللوكال ستوريدج
+    const token = localStorage.getItem("token"); 
+    const userName = localStorage.getItem("userName"); // أو أي اسم إنتوا مسجلين بيه الداتا
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userName"); // امسح أي داتا تانية متعلقة باليوزر
+        navigate("/signin"); // نرجعه لصفحة اللوجين
+    };
     const [isAuthOpen, setIsAuthOpen] = useState(false);
 
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -74,19 +84,23 @@ export const Navbar = ({search, setSearch}) => {
                 </button>
 
                 <div className=" d-none d-sm-flex align-items-center gap-2">
-                <Link
-                    to="/signin"
-                    className="nav-link signin px-2 py-1 rounded-pill"
-                >
-                    Sign In
-                </Link>
-
-                <Link
-                    to="/signup"
-                    className="signup nav-link signup rounded-pill px-3 py-1 shadow-sm"
-                >
-                    Sign Up
-                </Link>
+                {token ? (
+                    <>
+                        <span className="fw-bold me-2 text-capitalize">{userName || "User"}</span>
+                        <button onClick={handleLogout} className="btn btn-outline-danger px-3 py-1 rounded-pill text-center">
+                            Logout
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <Link to="/signin" className="nav-link signin px-2 py-1 rounded-pill">
+                            Sign In
+                        </Link>
+                        <Link to="/signup" className="signup nav-link signup rounded-pill px-3 py-1 shadow-sm">
+                            Sign Up
+                        </Link>
+                    </>
+                )}
                 </div>
             </div>
 
@@ -105,21 +119,25 @@ export const Navbar = ({search, setSearch}) => {
             )}
 
             {isAuthOpen && (
-                <div className="w-100 d-sm-none d-flex flex-column gap-2 mt-2">
-                <Link
-                    to="/signin"
-                    className="nav-link signin px-2 py-1 rounded-pill text-center"
-                >
-                    Sign In
-                </Link>
-
-                <Link
-                    to="/signup"
-                    className="nav-link signup rounded-pill px-3 py-1 shadow-sm text-center"
-                >
-                    Sign Up
-                </Link>
-                </div>
+            <div className="w-100 d-sm-none d-flex flex-column gap-2 mt-2">
+                {token ? (
+                    <>
+                        <span className="fw-bold text-center text-capitalize mb-1">{userName || "User"}</span>
+                        <button onClick={handleLogout} className="btn btn-outline-danger px-3 py-1 rounded-pill text-center">
+                            Logout
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <Link to="/signin" className="nav-link signin px-2 py-1 rounded-pill text-center">
+                            Sign In
+                        </Link>
+                        <Link to="/signup" className="nav-link signup rounded-pill px-3 py-1 shadow-sm text-center">
+                            Sign Up
+                        </Link>
+                    </>
+                )}
+            </div>
             )}
         </div>
       </nav>
