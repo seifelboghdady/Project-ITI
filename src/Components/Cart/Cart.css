@@ -1,6 +1,19 @@
 .cart-page {
   min-height: 70vh;
   background: #fafafa;
+  animation: cartPageEnter 0.5s ease-out;
+}
+
+@keyframes cartPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .cart-list {
