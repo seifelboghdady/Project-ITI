@@ -75,7 +75,7 @@
 }
 
 /* Primary accent button (Place Order / Continue Shopping) */
-.btn-checkout-primary {
+.btn.btn-checkout-primary {
   background-color: var(--bloom-accent);
   border: 1px solid var(--bloom-accent);
   color: #ffffff;
@@ -85,14 +85,14 @@
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 
-.btn-checkout-primary:hover,
-.btn-checkout-primary:focus {
+.btn.btn-checkout-primary:hover,
+.btn.btn-checkout-primary:focus {
   background-color: var(--bloom-accent-hover);
   border-color: var(--bloom-accent-hover);
   color: #ffffff;
 }
 
-.btn-checkout-primary:disabled {
+.btn.btn-checkout-primary:disabled {
   background-color: var(--bloom-accent);
   opacity: 0.7;
 }

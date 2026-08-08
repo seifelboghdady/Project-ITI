@@ -117,15 +117,15 @@
 }
 
 .cart-primary-btn {
-  color: #1b1b1b;
-  background: var(--primary-color);
-  border-color: var(--primary-color);
+  color: #1b1b1b !important;
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
 }
 
 .cart-primary-btn:hover {
-  color: #1b1b1b;
-  background: #e3ba00;
-  border-color: #e3ba00;
+  color: #1b1b1b !important;
+  background: #e3ba00 !important;
+  border-color: #e3ba00 !important;
 }
 
 .empty-cart-button {
