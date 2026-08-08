@@ -18,7 +18,7 @@ function App() {
     <>
       <Navbar search={search} setSearch={setSearch}/>
       <Routes>
-        <Route path="/" element={<Home search={search} />} />
+        <Route path="/" element={<Home search={search} setSearch={setSearch} />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
        
