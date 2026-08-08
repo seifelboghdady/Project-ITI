@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { BsDash, BsPlus, BsTrash } from "react-icons/bs";
 import { useCart } from "./useCart";
+import { useEffect } from "react";
 import "./Cart.css";
 
 export const Cart = () => {
@@ -13,6 +14,10 @@ export const Cart = () => {
     const returnTo = location.state?.returnTo;
     navigate(returnTo && returnTo !== "/cart" ? returnTo : "/");
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const shipping = cartItems.length ? 12 : 0;
   const orderTotal = cartTotal + shipping;

@@ -1,6 +1,19 @@
 .cart-page {
   min-height: 70vh;
   background: #fafafa;
+  animation: cartPageEnter 0.5s ease-out;
+}
+
+@keyframes cartPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .cart-list {
@@ -117,15 +130,15 @@
 }
 
 .cart-primary-btn {
-  color: #1b1b1b;
-  background: var(--primary-color);
-  border-color: var(--primary-color);
+  color: #1b1b1b !important;
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
 }
 
 .cart-primary-btn:hover {
-  color: #1b1b1b;
-  background: #e3ba00;
-  border-color: #e3ba00;
+  color: #1b1b1b !important;
+  background: #e3ba00 !important;
+  border-color: #e3ba00 !important;
 }
 
 .empty-cart-button {
